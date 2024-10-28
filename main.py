@@ -1,12 +1,43 @@
 import time
-from machine import Pin
+from machine import Pin, ADC
 
-CLK = Pin(1, Pin.OUT)
-MOSI = Pin(0, Pin.OUT)
+CLK = Pin(5, Pin.OUT)
+MOSI = Pin(4, Pin.OUT)
 CS = Pin(3, Pin.OUT)
-RST = Pin(2, Pin.OUT)
+RST = Pin(8, Pin.OUT)
 CS.on()
-LED = Pin(25, Pin.OUT)
+LED = Pin(18, Pin.OUT)
+adc1 = ADC(Pin(28))
+adc2 = ADC(Pin(27))
+V12V_EN = Pin(11, Pin.OUT)
+
+# Function to convert ADC reading to voltage
+def adc_to_voltage(adc_value):
+    return (adc_value / 65535) * 3.3  # Convert to voltage (0 to 3.3V)
+
+# Function to read ADC values and print voltages
+def read_and_print_adc():
+    # Read ADC values
+    adc_value1 = adc1.read_u16()
+    adc_value2 = adc2.read_u16()
+    
+    # Convert ADC values to voltage
+    voltage1 = adc_to_voltage(adc_value1)
+    voltage2 = adc_to_voltage(adc_value2)
+    
+    # Print the voltages
+    print("Voltage ADC1 (GP26): {:.3f} V".format(voltage1))
+    print("Voltage ADC2 (GP27): {:.3f} V".format(voltage2))
+    
+    return voltage1, voltage2
+
+def check_voltages_and_control_pin(voltage1, voltage2):
+    if voltage1 > 1.5 or voltage2 > 1.5:
+        V12V_EN.value(1)  # Set GP11 high
+        print("GP11 set high")
+    else:
+        V12V_EN.value(0)  # Set GP11 low
+        print("GP11 set low")
 
 def clock_tick():
     time.sleep(0.0001)
@@ -74,6 +105,11 @@ def disp_init():
 LED.on()
 disp_init()
 LED.off()
+
+while True:
+    voltage1, voltage2 = read_and_print_adc()  # Call the function to read and print ADC values
+    time.sleep(1)  # Wait for a short period before the next reading
+    check_voltages_and_control_pin(voltage1, voltage2)
 
 # firmware/config.txt settings:
 

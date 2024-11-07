@@ -1,6 +1,6 @@
 import usb_keypad
 import mode_controller
-import display_driver
+import display_init
 
 import time
 import board
@@ -120,8 +120,8 @@ def check_voltages_and_control_pin(voltage1, voltage2):
 # LED.value = False
 
 # Comment out if using SPI Display Mode
-
-display_driver.disp_init()
+time.sleep(1)
+display_init.disp_init()
 
 while True:
     # Check if rTouch toggles the mode

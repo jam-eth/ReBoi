@@ -118,6 +118,7 @@ disp_init()
 LED.value = False
 
 while True:
+    usb_keypad.check_buttons()
     voltage1, voltage2 = read_and_print_adc()  # Call the function to read and print ADC values
     time.sleep(1)  # Wait for a short period before the next reading
     check_voltages_and_control_pin(voltage1, voltage2)

@@ -1,4 +1,6 @@
 import usb_keypad
+import mode_controller
+import display_driver
 
 import time
 import board
@@ -53,72 +55,89 @@ def check_voltages_and_control_pin(voltage1, voltage2):
         V12V_EN.value = False  # Set GP11 low
         print("GP11 set low")
 
-def clock_tick():
-    time.sleep(0.0001)
-    CLK.value = False
-    time.sleep(0.0001)
-    CLK.value = True
-    time.sleep(0.0001)
+# def clock_tick():
+#     time.sleep(0.0001)
+#     CLK.value = False
+#     time.sleep(0.0001)
+#     CLK.value = True
+#     time.sleep(0.0001)
 
-def write_bit(v):
-    MOSI.value = v == 1
-    clock_tick()
-    print("bit written: " + str(MOSI.value))
+# def write_bit(v):
+#     MOSI.value = v == 1
+#     clock_tick()
+#     print("bit written: " + str(MOSI.value))
 
-def write_byte(v):
-    for x in range(0, 8):
-        write_bit(v & (0b10000000 >> x))
+# def write_byte(v):
+#     for x in range(0, 8):
+#         write_bit(v & (0b10000000 >> x))
 
-def write_register(register, data):
-    if not isinstance(data, list):
-        data = [data]
-    print("data is:")
-    print([data])
-    CS.value = False
-    write_bit(0)  # register select
-    write_byte(register)
-    print("register written")
-    print(hex(register))
-    for i in range(0, len(data)):
-        write_bit(1)  # register write
-        write_byte(data[i])
-        print("data written")
-    CS.value = True
+# def write_register(register, data):
+#     if not isinstance(data, list):
+#         data = [data]
+#     print("data is:")
+#     print([data])
+#     CS.value = False
+#     write_bit(0)  # register select
+#     write_byte(register)
+#     print("register written")
+#     print(hex(register))
+#     for i in range(0, len(data)):
+#         write_bit(1)  # register write
+#         write_byte(data[i])
+#         print("data written")
+#     CS.value = True
 
-def write_cmd(v):
-    CS.value = False
-    write_bit(0)
-    for x in range(0, 8):
-        write_bit(v & (0b10000000 >> x))
-    print("command written " + hex(v))
-    CS.value = True
+# def write_cmd(v):
+#     CS.value = False
+#     write_bit(0)
+#     for x in range(0, 8):
+#         write_bit(v & (0b10000000 >> x))
+#     print("command written " + hex(v))
+#     CS.value = True
 
-def reset(): 
-    time.sleep(0.001)
-    RST.value = False
-    time.sleep(0.120)
-    RST.value = True
-    time.sleep(0.001)
+# def reset(): 
+#     time.sleep(0.001)
+#     RST.value = False
+#     time.sleep(0.120)
+#     RST.value = True
+#     time.sleep(0.001)
 
-def disp_init():
-    reset()
-    write_cmd(0x01)  # SW reset
-    time.sleep(0.010)
-    write_cmd(0x11)  # Sleep out
-    time.sleep(0.010)
-    write_register(0x3a, 0x60)                 # pixel format set
-    write_register(0xb0, 0xc0)                 # RGB Interface Signal Control
-    write_register(0xf6, [0x01, 0x00, 0x06])   # Interface Control
-    write_register(0x36, 0x48)                 # BGR and mirroring
+# def disp_init():
+#     reset()
+#     write_cmd(0x01)  # SW reset
+#     time.sleep(0.010)
+#     write_cmd(0x11)  # Sleep out
+#     time.sleep(0.010)
+#     write_register(0x3a, 0x60)                 # pixel format set
+#     write_register(0xb0, 0xc0)                 # RGB Interface Signal Control
+#     write_register(0xf6, [0x01, 0x00, 0x06])   # Interface Control
+#     write_register(0x36, 0x48)                 # BGR and mirroring
   
-    write_cmd(0x29)  # Display ON
+#     write_cmd(0x29)  # Display ON
 
-LED.value = True
-disp_init()
-LED.value = False
+# LED.value = True
+# disp_init()
+# LED.value = False
+
+# Comment out if using SPI Display Mode
+
+display_driver.disp_init()
 
 while True:
+    # Check if rTouch toggles the mode
+    mode_controller.toggle_mode()
+    
+    # Handle rUp and rDown based on the current mode
+    mode_controller.handle_rUp_rDown()
+    
+    # Check other buttons (A, B, etc.)
     usb_keypad.check_buttons()
-    voltage1, voltage2 = read_and_print_adc()  # Call the function to read and print ADC values
-    time.sleep(1)  # Wait for a short period before the next reading
+
+    # Read the CC Volatages and Print them
+    voltage1, voltage2 = read_and_print_adc() 
+
+    # Enable Charging if a CC voltage indicates a 3A supply
     check_voltages_and_control_pin(voltage1, voltage2)
+    
+    time.sleep(1)  # Wait for a short period before the next reading
+    time.sleep(0.01)  # Short delay for loop

@@ -1,3 +1,5 @@
+import usb_keypad
+
 import time
 import board
 import digitalio

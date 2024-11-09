@@ -9,10 +9,16 @@ import time
 kbd = Keyboard(usb_hid.devices)
 
 # Setup buttons (replace pins with actual GPIO)
-button_A = digitalio.DigitalInOut(board.D1)  # Other buttons
-button_B = digitalio.DigitalInOut(board.D2)
-button_rUp = digitalio.DigitalInOut(board.D5)
-button_rDown = digitalio.DigitalInOut(board.D6)
+button_A = digitalio.DigitalInOut(board.GP0)  # Other buttons
+button_B = digitalio.DigitalInOut(board.GP1)
+button_rUp = digitalio.DigitalInOut(board.GP21)
+button_rDown = digitalio.DigitalInOut(board.GP23)
+button_Up = digitalio.DigitalInOut(board.GP12)
+button_Down = digitalio.DigitalInOut(board.GP15)
+button_Left = digitalio.DigitalInOut(board.GP14)
+button_Right = digitalio.DigitalInOut(board.GP13)
+button_Start = digitalio.DigitalInOut(board.GP25)
+button_Select = digitalio.DigitalInOut(board.GP24)
 
 # Configure as inputs with pull-ups
 for btn in [button_A, button_B, button_rUp, button_rDown]:
@@ -23,6 +29,12 @@ button_states = {
     "A": {"pressed": False, "last_press_time": 0},
     "B": {"pressed": False, "last_press_time": 0},
     "rUp": {"pressed": False, "last_press_time": 0},
+    "Up": {"pressed": False, "last_press_time": 0},
+    "Down": {"pressed": False, "last_press_time": 0},
+    "Left": {"pressed": False, "last_press_time": 0},
+    "Right": {"pressed": False, "last_press_time": 0},
+    "Start": {"pressed": False, "last_press_time": 0},
+    "Select": {"pressed": False, "last_press_time": 0},
     "rDown": {"pressed": False, "last_press_time": 0}
 }
 

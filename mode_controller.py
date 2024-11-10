@@ -6,7 +6,7 @@ from adafruit_hid.keycode import Keycode
 import usb_keypad  # to access keyboard functions
 
 # Configure rTouch and set up PWM
-button_rTouch = digitalio.DigitalInOut(board.D3)  # Replace with actual pin
+button_rTouch = digitalio.DigitalInOut(board.GP22)  # Replace with actual pin
 button_rTouch.direction = digitalio.Direction.INPUT
 button_rTouch.pull = digitalio.Pull.UP
 

@@ -3,17 +3,22 @@ import digitalio
 import board
 
 # Initialize pins
-CLK = digitalio.DigitalInOut(board.D1)  # Replace with correct pin
+CLK = digitalio.DigitalInOut(board.GP5)  # Replace with correct pin
 CLK.direction = digitalio.Direction.OUTPUT
 
-MOSI = digitalio.DigitalInOut(board.D2)  # Replace with correct pin
+MOSI = digitalio.DigitalInOut(board.GP4)  # Replace with correct pin
 MOSI.direction = digitalio.Direction.OUTPUT
 
-CS = digitalio.DigitalInOut(board.D3)  # Replace with correct pin
+CS = digitalio.DigitalInOut(board.GP3)  # Replace with correct pin
 CS.direction = digitalio.Direction.OUTPUT
 
-RST = digitalio.DigitalInOut(board.D4)  # Replace with correct pin
+RST = digitalio.DigitalInOut(board.GP8)  # Replace with correct pin
 RST.direction = digitalio.Direction.OUTPUT
+
+LED = digitalio.DigitalInOut(board.GP18)  # Replace with correct pin
+LED.direction = digitalio.Direction.OUTPUT
+
+LED.on()
 
 def clock_tick():
     time.sleep(0.0001)
@@ -71,3 +76,5 @@ def disp_init():
     write_register(0xf6, [0x01, 0x00, 0x06])   # Interface Control
     write_register(0x36, 0x48)                 # BGR and mirroring
     write_cmd(0x29)  # Display ON
+
+LED.off()

@@ -3,14 +3,16 @@ import digitalio
 import usb_hid
 from adafruit_hid.keyboard import Keyboard
 from adafruit_hid.keycode import Keycode
+from adafruit_hid.consumer_control import ConsumerControl
 from adafruit_hid.consumer_control_code import ConsumerControlCode
 import time
 
-# Initialize the keyboard
+# Initialize the keyboard and consumer control
 kbd = Keyboard(usb_hid.devices)
+consumer_ctrl = ConsumerControl(usb_hid.devices)
 
 # Setup buttons (replace pins with actual GPIO)
-button_A = digitalio.DigitalInOut(board.GP0)  # Other buttons
+button_A = digitalio.DigitalInOut(board.GP0)
 button_B = digitalio.DigitalInOut(board.GP1)
 button_rUp = digitalio.DigitalInOut(board.GP21)
 button_rDown = digitalio.DigitalInOut(board.GP23)
@@ -41,15 +43,21 @@ button_states = {
 
 DEBOUNCE_DELAY = 0.01
 
-def send_key_on_press(button, keycode, state_name):
+def send_key_on_press(button, keycode, state_name, is_consumer=False):
     current_time = time.monotonic()
     if not button.value and not button_states[state_name]["pressed"]:
         if (current_time - button_states[state_name]["last_press_time"]) > DEBOUNCE_DELAY:
-            kbd.press(keycode)
+            if is_consumer:
+                consumer_ctrl.press(keycode)
+            else:
+                kbd.press(keycode)
             button_states[state_name]["pressed"] = True
             button_states[state_name]["last_press_time"] = current_time
     elif button.value and button_states[state_name]["pressed"]:
-        kbd.release(keycode)
+        if is_consumer:
+            consumer_ctrl.release()
+        else:
+            kbd.release(keycode)
         button_states[state_name]["pressed"] = False
         button_states[state_name]["last_press_time"] = current_time
 
@@ -62,7 +70,5 @@ def check_buttons():
     send_key_on_press(button_Right, Keycode.RIGHT_ARROW, "Right")
     send_key_on_press(button_Start, Keycode.ENTER, "Start")
     send_key_on_press(button_Select, Keycode.TAB, "Select")
-    send_key_on_press(button_rUp, ConsumerControlCode.VOLUME_INCREMENT, "Volume Up")
-    send_key_on_press(button_rDown, ConsumerControlCode.VOLUME_DECREMENT, "Volume Down")
-    
-    # rUp and rDown will be controlled through mode_controller based on the current mode
+    send_key_on_press(button_rUp, ConsumerControlCode.VOLUME_INCREMENT, "rUp", is_consumer=True)
+    send_key_on_press(button_rDown, ConsumerControlCode.VOLUME_DECREMENT, "rDown", is_consumer=True)

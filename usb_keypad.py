@@ -3,6 +3,7 @@ import digitalio
 import usb_hid
 from adafruit_hid.keyboard import Keyboard
 from adafruit_hid.keycode import Keycode
+from adafruit_hid.consumer_control_code import ConsumerControlCode
 import time
 
 # Initialize the keyboard
@@ -61,7 +62,7 @@ def check_buttons():
     send_key_on_press(button_Right, Keycode.RIGHT_ARROW, "Right")
     send_key_on_press(button_Start, Keycode.ENTER, "Start")
     send_key_on_press(button_Select, Keycode.TAB, "Select")
-    send_key_on_press(button_rUp, Keycode.VOLUME_INCREMENT, "Volume Up")
-    send_key_on_press(button_rDown, Keycode.VOLUME_DECREMENT, "Volume Down")
+    send_key_on_press(button_rUp, ConsumerControlCode.VOLUME_INCREMENT, "Volume Up")
+    send_key_on_press(button_rDown, ConsumerControlCode.VOLUME_DECREMENT, "Volume Down")
     
     # rUp and rDown will be controlled through mode_controller based on the current mode

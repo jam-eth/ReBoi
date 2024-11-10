@@ -8,21 +8,21 @@ import digitalio
 import analogio
 
 # Initialize digital output pins
-CLK = digitalio.DigitalInOut(board.GP5)
-CLK.direction = digitalio.Direction.OUTPUT
+# CLK = digitalio.DigitalInOut(board.GP5)
+# CLK.direction = digitalio.Direction.OUTPUT
 
-MOSI = digitalio.DigitalInOut(board.GP4)
-MOSI.direction = digitalio.Direction.OUTPUT
+# MOSI = digitalio.DigitalInOut(board.GP4)
+# MOSI.direction = digitalio.Direction.OUTPUT
 
-CS = digitalio.DigitalInOut(board.GP3)
-CS.direction = digitalio.Direction.OUTPUT
-CS.value = True  # Equivalent to CS.on() in MicroPython
+# CS = digitalio.DigitalInOut(board.GP3)
+# CS.direction = digitalio.Direction.OUTPUT
+# CS.value = True  # Equivalent to CS.on() in MicroPython
 
-RST = digitalio.DigitalInOut(board.GP8)
-RST.direction = digitalio.Direction.OUTPUT
+# RST = digitalio.DigitalInOut(board.GP8)
+# RST.direction = digitalio.Direction.OUTPUT
 
-LED = digitalio.DigitalInOut(board.GP18)
-LED.direction = digitalio.Direction.OUTPUT
+# LED = digitalio.DigitalInOut(board.GP18)
+# LED.direction = digitalio.Direction.OUTPUT
 
 V12V_EN = digitalio.DigitalInOut(board.GP11)
 V12V_EN.direction = digitalio.Direction.OUTPUT

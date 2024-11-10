@@ -11,14 +11,13 @@ MOSI.direction = digitalio.Direction.OUTPUT
 
 CS = digitalio.DigitalInOut(board.GP3)  # Replace with correct pin
 CS.direction = digitalio.Direction.OUTPUT
+CS.value = True
 
 RST = digitalio.DigitalInOut(board.GP8)  # Replace with correct pin
 RST.direction = digitalio.Direction.OUTPUT
 
 LED = digitalio.DigitalInOut(board.GP18)  # Replace with correct pin
 LED.direction = digitalio.Direction.OUTPUT
-
-LED.on()
 
 def clock_tick():
     time.sleep(0.0001)
@@ -66,6 +65,7 @@ def reset():
     time.sleep(0.001)
 
 def disp_init():
+    LED.value = True
     reset()
     write_cmd(0x01)  # SW reset
     time.sleep(0.010)
@@ -76,5 +76,4 @@ def disp_init():
     write_register(0xf6, [0x01, 0x00, 0x06])   # Interface Control
     write_register(0x36, 0x48)                 # BGR and mirroring
     write_cmd(0x29)  # Display ON
-
-LED.off()
+    LED.value = False

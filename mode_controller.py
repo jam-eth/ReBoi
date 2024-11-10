@@ -10,7 +10,7 @@ button_rTouch = digitalio.DigitalInOut(board.GP22)  # Replace with actual pin
 button_rTouch.direction = digitalio.Direction.INPUT
 button_rTouch.pull = digitalio.Pull.UP
 
-pwm_signal = pwmio.PWMOut(board.D7, frequency=5000, duty_cycle=0)  # Adjust pin and frequency as needed
+pwm_signal = pwmio.PWMOut(board.GP16, frequency=5000, duty_cycle=0)  # Adjust pin and frequency as needed
 
 # Variables for mode and debounce
 current_mode = 0

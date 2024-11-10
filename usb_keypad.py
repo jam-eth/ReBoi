@@ -59,8 +59,8 @@ def check_buttons():
     send_key_on_press(button_Down, Keycode.DOWN_ARROW, "Down")
     send_key_on_press(button_Left, Keycode.LEFT_ARROW, "Left")
     send_key_on_press(button_Right, Keycode.RIGHT_ARROW, "Right")
-    send_key_on_press(button_Start, Keycode.ENTER, "Start(Return)")
-    send_key_on_press(button_Select, Keycode.TAB, "Select(Tab)")
+    send_key_on_press(button_Start, Keycode.ENTER, "Start-Return")
+    send_key_on_press(button_Select, Keycode.TAB, "Select-Tab")
     send_key_on_press(button_rUp, Keycode.VOLUME_INCREMENT, "Volume Up")
     send_key_on_press(button_rDown, Keycode.VOLUME_DECREMENT, "Volume Down")
     

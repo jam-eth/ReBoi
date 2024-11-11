@@ -43,6 +43,11 @@ else
     exit 1
 fi
 
+# Add a specific line as the second-to-last line in config.txt
+echo "adding auto-run to /etc/rc.local"
+sudo sed -i '$ i sudo /home/pi/fbcp-ili9341/build/fbcp-ili9341 &' /etc/rc.local
+
+
 # Move into the fbcp-ili9341 directory and create/build in the build directory
 cd "$DEST_DIR"
 mkdir -p build

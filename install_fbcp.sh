@@ -5,23 +5,21 @@ echo "Installing CMake..."
 sudo apt-get update
 sudo apt-get install -y cmake
 
-# Navigate to the home directory
-cd ~
+# Set the destination directory for cloning
+DEST_DIR="/home/pi/fbcp-ili9341"
 
-# Clone the repository if it doesn’t already exist
-REPO_URL="https://github.com/juj/fbcp-ili9341.git"
-REPO_DIR="fbcp-ili9341"
-if [ ! -d "$REPO_DIR" ]; then
-    echo "Cloning the fbcp-ili9341 repository..."
-    git clone "$REPO_URL"
+# Clone the repository into /home/pi if it doesn't already exist
+if [ ! -d "$DEST_DIR" ]; then
+    echo "Cloning the fbcp-ili9341 repository into /home/pi..."
+    git clone https://github.com/juj/fbcp-ili9341.git "$DEST_DIR"
 else
-    echo "Repository already exists."
+    echo "Repository already exists in $DEST_DIR."
 fi
 
 # Replace gpu.cpp with the one from the ReBoi directory
 REPLACEMENT_DIR="ReBoi"
 SOURCE_FILE="$REPLACEMENT_DIR/gpu.cpp"
-TARGET_FILE="$REPO_DIR/gpu.cpp"
+TARGET_FILE="$DEST_DIR/gpu.cpp"
 
 if [ -f "$SOURCE_FILE" ]; then
     echo "Replacing gpu.cpp with the version from ReBoi..."
@@ -32,7 +30,7 @@ else
 fi
 
 # Move into the fbcp-ili9341 directory and create/build in the build directory
-cd "$REPO_DIR"
+cd "$DEST_DIR"
 mkdir -p build
 cd build
 

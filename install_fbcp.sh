@@ -17,22 +17,16 @@ else
 fi
 
 # Replace gpu.cpp with the one from the ReBoi directory
-REPLACEMENT_DIR="ReBoi"  # Make sure ReBoi is the correct path
-SOURCE_FILE="$REPLACEMENT_DIR/gpu.cpp"
+SCRIPT_DIR=$(pwd)  # Get the directory where the script is running
+SOURCE_FILE="$SCRIPT_DIR/gpu.cpp"  # gpu.cpp is in the same directory as the script
 TARGET_FILE="$DEST_DIR/gpu.cpp"
 
-# Check if ReBoi directory exists
-if [ ! -d "$REPLACEMENT_DIR" ]; then
-    echo "Error: ReBoi directory not found. Please make sure it's in the same directory as the script."
-    exit 1
-fi
-
-# Check if the gpu.cpp file exists in ReBoi directory
+# Check if the gpu.cpp file exists in the script directory
 if [ -f "$SOURCE_FILE" ]; then
-    echo "Replacing gpu.cpp with the version from ReBoi..."
+    echo "Replacing gpu.cpp with the version from $SCRIPT_DIR..."
     cp "$SOURCE_FILE" "$TARGET_FILE"
 else
-    echo "Error: gpu.cpp file not found in the ReBoi directory at $SOURCE_FILE."
+    echo "Error: gpu.cpp file not found in the script directory at $SOURCE_FILE."
     exit 1
 fi
 

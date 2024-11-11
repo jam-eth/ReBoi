@@ -5,6 +5,19 @@ echo "Installing CMake..."
 sudo apt-get update
 sudo apt-get install -y cmake
 
+# Add required configuration lines to /boot/config.txt
+CONFIG_FILE="/boot/config.txt"
+echo "Adding configuration lines to config.txt..."
+
+sudo tee -a "$CONFIG_FILE" > /dev/null <<EOL
+# Custom HDMI and display settings
+hdmi_group=2
+hdmi_mode=87
+hdmi_cvt=240 220 60 1 0 0 0
+hdmi_force_hotplug=1
+display_rotate=1
+EOL
+
 # Set the destination directory for cloning
 DEST_DIR="/home/pi/fbcp-ili9341"
 
@@ -16,7 +29,7 @@ else
     echo "Repository already exists in $DEST_DIR."
 fi
 
-# Replace gpu.cpp with the one from the ReBoi directory
+# Replace gpu.cpp with the one from the script directory
 SCRIPT_DIR=$(pwd)  # Get the directory where the script is running
 SOURCE_FILE="$SCRIPT_DIR/gpu.cpp"  # gpu.cpp is in the same directory as the script
 TARGET_FILE="$DEST_DIR/gpu.cpp"

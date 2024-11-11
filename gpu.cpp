@@ -36,7 +36,7 @@ uint16_t *videoCoreFramebuffer[2] = {};
 volatile int numNewGpuFrames = 0;
 
 int displayXOffset = 0;
-int displayYOffset = 80;
+int displayYOffset = 100;
 int gpuFrameWidth = 0;
 int gpuFrameHeight = 0;
 int gpuFramebufferScanlineStrideBytes = 0;

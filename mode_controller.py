@@ -9,11 +9,11 @@ button_rTouch = digitalio.DigitalInOut(board.GP22)
 button_rTouch.direction = digitalio.Direction.INPUT
 button_rTouch.pull = digitalio.Pull.UP
 
-button_rUp = digitalio.DigitalInOut(board.GP19)
+button_rUp = digitalio.DigitalInOut(board.GP21)
 button_rUp.direction = digitalio.Direction.INPUT
 button_rUp.pull = digitalio.Pull.UP
 
-button_rDown = digitalio.DigitalInOut(board.GP18)
+button_rDown = digitalio.DigitalInOut(board.GP23)
 button_rDown.direction = digitalio.Direction.INPUT
 button_rDown.pull = digitalio.Pull.UP
 

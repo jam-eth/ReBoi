@@ -3,10 +3,13 @@ import digitalio
 import usb_hid
 from adafruit_hid.keyboard import Keyboard
 from adafruit_hid.keycode import Keycode
+from adafruit_hid.consumer_control import ConsumerControl
+from adafruit_hid.consumer_control_code import ConsumerControlCode
 import time
 
 # Initialize the keyboard and consumer control
 kbd = Keyboard(usb_hid.devices)
+consumer_ctrl = ConsumerControl(usb_hid.devices)
 
 # Setup buttons (replace pins with actual GPIO)
 button_A = digitalio.DigitalInOut(board.GP0)
@@ -36,7 +39,7 @@ button_states = {
 
 DEBOUNCE_DELAY = 0.01
 
-def send_key_on_press(button, keycode, state_name):
+def send_key_on_press(button, keycode, state_name, is_consumer=False):
     current_time = time.monotonic()
     if not button.value and not button_states[state_name]["pressed"]:
         if (current_time - button_states[state_name]["last_press_time"]) > DEBOUNCE_DELAY:

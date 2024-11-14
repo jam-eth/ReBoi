@@ -10,6 +10,14 @@ button_rTouch = digitalio.DigitalInOut(board.GP22)  # Replace with actual pin
 button_rTouch.direction = digitalio.Direction.INPUT
 button_rTouch.pull = digitalio.Pull.UP
 
+button_rUp = digitalio.DigitalInOut(board.GP19)  # Replace with actual pin
+button_rUp.direction = digitalio.Direction.INPUT
+button_rUp.pull = digitalio.Pull.UP
+
+button_rDown = digitalio.DigitalInOut(board.GP18)  # Replace with actual pin
+button_rDown.direction = digitalio.Direction.INPUT
+button_rDown.pull = digitalio.Pull.UP
+
 pwm_signal = pwmio.PWMOut(board.GP16, frequency=5000, duty_cycle=0)  # Adjust pin and frequency as needed
 
 # Variables for mode and debounce
@@ -44,25 +52,25 @@ def handle_rUp_rDown():
     """Handle behavior of rUp and rDown based on the current mode."""
     if current_mode == 0:
         # Keycode mode
-        if not usb_keypad.button_rUp.value:  # Press down to increase volume
+        if not button_rUp.value:  # Press down to increase volume
             usb_keypad.send_key_on_press(usb_keypad.button_rUp, Keycode.VOLUME_INCREMENT, "rUp")
-        elif usb_keypad.button_rUp.value:  # Release to stop sending the keypress
+        elif button_rUp.value:  # Release to stop sending the keypress
             usb_keypad.send_key_release(usb_keypad.button_rUp, "rUp")
         
-        if not usb_keypad.button_rDown.value:  # Press down to decrease volume
+        if not button_rDown.value:  # Press down to decrease volume
             usb_keypad.send_key_on_press(usb_keypad.button_rDown, Keycode.VOLUME_DECREMENT, "rDown")
-        elif usb_keypad.button_rDown.value:  # Release to stop sending the keypress
+        elif button_rDown.value:  # Release to stop sending the keypress
             usb_keypad.send_key_release(usb_keypad.button_rDown, "rDown")
 
     else:
         # PWM mode
-        if not usb_keypad.button_rUp.value:  # Increase PWM duty cycle on press
+        if not button_rUp.value:  # Increase PWM duty cycle on press
             current_pwm = pwm_signal.duty_cycle
             new_pwm = min(current_pwm + PWM_STEP_SIZE, PWM_MAX)
             pwm_signal.duty_cycle = new_pwm
             print("Increased PWM to:", pwm_signal.duty_cycle)
         
-        if not usb_keypad.button_rDown.value:  # Decrease PWM duty cycle on press
+        if not button_rDown.value:  # Decrease PWM duty cycle on press
             current_pwm = pwm_signal.duty_cycle
             new_pwm = max(current_pwm - PWM_STEP_SIZE, PWM_MIN)
             pwm_signal.duty_cycle = new_pwm

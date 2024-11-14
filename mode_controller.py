@@ -3,14 +3,24 @@ import digitalio
 import time
 import pwmio
 from adafruit_hid.keycode import Keycode
-import usb_keypad  # To access keyboard functions from the first script
+from adafruit_hid.consumer_control import ConsumerControl
+from adafruit_hid.consumer_control_code import ConsumerControlCode
 
-# Configure rTouch and set up PWM
+# Configure rTouch, rUp, rDown, and set up PWM
 button_rTouch = digitalio.DigitalInOut(board.GP22)  # Replace with actual pin
+button_rUp = digitalio.DigitalInOut(board.GP21)    # Replace with actual pin
+button_rDown = digitalio.DigitalInOut(board.GP23)  # Replace with actual pin
 button_rTouch.direction = digitalio.Direction.INPUT
 button_rTouch.pull = digitalio.Pull.UP
+button_rUp.direction = digitalio.Direction.INPUT
+button_rUp.pull = digitalio.Pull.UP
+button_rDown.direction = digitalio.Direction.INPUT
+button_rDown.pull = digitalio.Pull.UP
 
 pwm_signal = pwmio.PWMOut(board.GP16, frequency=5000, duty_cycle=0)  # Adjust pin and frequency as needed
+
+# Initialize consumer control for volume control
+consumer_ctrl = ConsumerControl(usb_hid.devices)
 
 # Variables for mode, debounce, and release tracking
 current_mode = 0
@@ -38,15 +48,25 @@ def toggle_mode():
 def handle_rUp_rDown():
     """Handle behavior of rUp and rDown based on the current mode."""
     if current_mode == 0:
-        # Keycode mode - only send key presses in this mode
-        usb_keypad.send_key_on_press(usb_keypad.button_rUp, Keycode.UP_ARROW, "rUp")
-        usb_keypad.send_key_on_press(usb_keypad.button_rDown, Keycode.DOWN_ARROW, "rDown")
+        # Keycode mode - send consumer commands (volume up/down)
+        if not button_rUp.value:
+            consumer_ctrl.press(ConsumerControlCode.VOLUME_INCREMENT)
+            print("Volume Up")
+        elif button_rUp.value:
+            consumer_ctrl.release(ConsumerControlCode.VOLUME_INCREMENT)
+
+        if not button_rDown.value:
+            consumer_ctrl.press(ConsumerControlCode.VOLUME_DECREMENT)
+            print("Volume Down")
+        elif button_rDown.value:
+            consumer_ctrl.release(ConsumerControlCode.VOLUME_DECREMENT)
+
     else:
-        # PWM mode - adjust PWM duty cycle without sending key presses
+        # PWM mode - adjust PWM duty cycle without sending consumer commands
         new_duty_cycle = pwm_signal.duty_cycle  # Track changes
-        if not usb_keypad.button_rUp.value:  # Increase PWM duty cycle
+        if not button_rUp.value:  # Increase PWM duty cycle
             new_duty_cycle = min(pwm_signal.duty_cycle + 1000, 65535)
-        elif not usb_keypad.button_rDown.value:  # Decrease PWM duty cycle
+        elif not button_rDown.value:  # Decrease PWM duty cycle
             new_duty_cycle = max(pwm_signal.duty_cycle - 1000, 0)
         
         # If duty cycle has changed, update and print it

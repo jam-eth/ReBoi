@@ -3,7 +3,11 @@ import digitalio
 import time
 import pwmio
 from adafruit_hid.keycode import Keycode
-import usb_keypad  # to access keyboard functions
+from adafruit_hid.consumer_control import ConsumerControl  # Direct HID control
+from adafruit_hid.consumer_control_code import ConsumerControlCode
+
+# Initialize HID for Consumer Control (volume control)
+consumer_control = ConsumerControl()  # Assuming you've set up USB HID in code.py
 
 # Configure rTouch and set up PWM
 button_rTouch = digitalio.DigitalInOut(board.GP22)  # Replace with actual pin
@@ -38,6 +42,10 @@ initial_pwm_value = PWM_MIN + (INITIAL_PWM_STEP * PWM_STEP_SIZE)
 pwm_signal.duty_cycle = initial_pwm_value
 print(f"Initial PWM set to step {INITIAL_PWM_STEP + 1}, value: {initial_pwm_value}")
 
+# Track state of rUp and rDown for detecting presses
+last_rUp_state = True
+last_rDown_state = True
+
 def toggle_mode():
     global current_mode, last_touch_time, last_rtouch_state
     current_time = time.monotonic()
@@ -50,31 +58,37 @@ def toggle_mode():
 
 def handle_rUp_rDown():
     """Handle behavior of rUp and rDown based on the current mode."""
+    global last_rUp_state, last_rDown_state
     if current_mode == 0:
         # Keycode mode
-        if not button_rUp.value:  # Press down to increase volume
-            usb_keypad.send_key_on_press(usb_keypad.button_rUp, Keycode.VOLUME_INCREMENT, "rUp")
-        elif button_rUp.value:  # Release to stop sending the keypress
-            usb_keypad.send_key_release(usb_keypad.button_rUp, "rUp")
-        
-        if not button_rDown.value:  # Press down to decrease volume
-            usb_keypad.send_key_on_press(usb_keypad.button_rDown, Keycode.VOLUME_DECREMENT, "rDown")
-        elif button_rDown.value:  # Release to stop sending the keypress
-            usb_keypad.send_key_release(usb_keypad.button_rDown, "rDown")
+        if not button_rUp.value and last_rUp_state:  # Send keypress only when button goes low
+            consumer_control.press(ConsumerControlCode.VOLUME_INCREMENT)
+            print("Volume Up key pressed")
+        elif button_rUp.value and not last_rUp_state:  # Detect button release
+            consumer_control.release()  # Release volume increment
+            print("Volume Up key released")
+
+        if not button_rDown.value and last_rDown_state:  # Send keypress only when button goes low
+            consumer_control.press(ConsumerControlCode.VOLUME_DECREMENT)
+            print("Volume Down key pressed")
+        elif button_rDown.value and not last_rDown_state:  # Detect button release
+            consumer_control.release()  # Release volume decrement
+            print("Volume Down key released")
 
     else:
         # PWM mode
-        if not button_rUp.value:  # Increase PWM duty cycle on press
+        if not button_rUp.value and last_rUp_state:  # Increase PWM duty cycle on press
             current_pwm = pwm_signal.duty_cycle
             new_pwm = min(current_pwm + PWM_STEP_SIZE, PWM_MAX)
             pwm_signal.duty_cycle = new_pwm
             print("Increased PWM to:", pwm_signal.duty_cycle)
         
-        if not button_rDown.value:  # Decrease PWM duty cycle on press
+        if not button_rDown.value and last_rDown_state:  # Decrease PWM duty cycle on press
             current_pwm = pwm_signal.duty_cycle
             new_pwm = max(current_pwm - PWM_STEP_SIZE, PWM_MIN)
             pwm_signal.duty_cycle = new_pwm
             print("Decreased PWM to:", pwm_signal.duty_cycle)
 
-        # Print PWM frequency when it changes
-        print("PWM Frequency:", pwm_signal.frequency)
+    # Update last state of rUp and rDown
+    last_rUp_state = button_rUp.value
+    last_rDown_state = button_rDown.value

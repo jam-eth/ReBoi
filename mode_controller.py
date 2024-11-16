@@ -9,11 +9,11 @@ button_rTouch = digitalio.DigitalInOut(board.GP22)
 button_rTouch.direction = digitalio.Direction.INPUT
 button_rTouch.pull = digitalio.Pull.UP
 
-button_rUp = digitalio.DigitalInOut(board.GP21)
+button_rUp = digitalio.DigitalInOut(board.GP19)
 button_rUp.direction = digitalio.Direction.INPUT
 button_rUp.pull = digitalio.Pull.UP
 
-button_rDown = digitalio.DigitalInOut(board.GP23)
+button_rDown = digitalio.DigitalInOut(board.GP18)
 button_rDown.direction = digitalio.Direction.INPUT
 button_rDown.pull = digitalio.Pull.UP
 
@@ -78,4 +78,4 @@ def handle_rUp_rDown():
 
         if not button_rDown.value and last_rDown_state:
             current_pwm = pwm_signal.duty_cycle
-            new_pwm = max
+            new_pwm = max(current_pwm - PWM_STEP_SIZE, PWM

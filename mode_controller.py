@@ -78,4 +78,4 @@ def handle_rUp_rDown():
 
         if not button_rDown.value and last_rDown_state:
             current_pwm = pwm_signal.duty_cycle
-            new_pwm = max(current_pwm - PWM_STEP_SIZE, PWM
+            new_pwm = max(current_pwm - PWM_STEP_SIZE, PWM)

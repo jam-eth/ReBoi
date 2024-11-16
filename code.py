@@ -1,11 +1,19 @@
 import usb_keypad
 import mode_controller
 import display_init
+from adafruit_hid.consumer_control import ConsumerControl
+import usb_hid
 
 import time
 import board
 import digitalio
 import analogio
+
+# Initialize ConsumerControl for HID
+consumer_control = ConsumerControl(usb_hid.devices)
+
+# Pass consumer_control to mode_controller setup
+mode_controller.setup(consumer_control)
 
 # Initialize digital output pins
 # CLK = digitalio.DigitalInOut(board.GP5)

@@ -147,5 +147,5 @@ while True:
     # Enable Charging if a CC voltage indicates a 3A supply
     check_voltages_and_control_pin(voltage1, voltage2)
     
-    time.sleep(1)  # Wait for a short period before the next reading
+#    time.sleep(1)  # Wait for a short period before the next reading
     time.sleep(0.01)  # Short delay for loop

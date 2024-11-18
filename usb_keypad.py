@@ -22,7 +22,7 @@ button_Start = digitalio.DigitalInOut(board.GP25)
 button_Select = digitalio.DigitalInOut(board.GP24)
 
 # Configure as inputs with pull-ups
-for btn in [button_A, button_B, button_Up, button_Down, button_Left, button_Right, button_Start, button_Select]:
+for btn in [button_A, button_B, button_Up, button_Down, button_Left, button_Right]:
     btn.direction = digitalio.Direction.INPUT
     btn.pull = digitalio.Pull.UP
 

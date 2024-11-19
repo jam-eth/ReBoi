@@ -1,5 +1,7 @@
 #!/bin/bash
 
+SCRIPT_DIR=$(pwd)
+
 # Update package list and install cmake
 echo "Installing CMake..."
 sudo apt-get update
@@ -53,7 +55,7 @@ if [ "$DRIVE_LABEL" == "RPI-RP2" ]; then
 fi
 
 # If the detected drive is CIRCUITPY, copy the Python files
-if [ "$DRIVE_LABEL" == "CIRCUITPY" ]; then
+if  [ "$DRIVE_LABEL" == "CIRCUITPY" ]; then
     echo "Copying Python files to $MOUNTPOINT..."
     cp "$SCRIPT_DIR/display_init.py" "$MOUNTPOINT"
     cp "$SCRIPT_DIR/usb_keypad.py" "$MOUNTPOINT"

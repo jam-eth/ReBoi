@@ -74,7 +74,7 @@ else
 fi
 
 # Replace gpu.cpp with the one from the script directory
-SOURCE_FILE="$SCRIPT_DIR/gpu.cpp"
+SOURCE_FILE="$ReBoi/gpu.cpp"
 TARGET_FILE="$DEST_DIR/gpu.cpp"
 
 if [ -f "$SOURCE_FILE" ]; then

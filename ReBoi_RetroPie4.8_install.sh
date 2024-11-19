@@ -5,15 +5,17 @@ TARGET_LABELS=("RPI-RP2" "CIRCUITPY")
 
 # Function to find the USB drive with the specified labels
 find_usb_drive() {
-    DETECTED_LABEL=""
-    MOUNT_POINT=""
+    echo "Detecting USB drives..."
+    lsblk -f
+    MOUNTPOINT=$(lsblk -f | awk '/RPI-RP2|CIRCUITPY/ {print $NF}')
+    DRIVE_LABEL=$(lsblk -f | awk '/RPI-RP2|CIRCUITPY/ {print $3}')
 
-    for LABEL in "${TARGET_LABELS[@]}"; do
-        MOUNT_POINT=$(lsblk -f | grep "$LABEL" | awk '{print $7}')
-        if [ ! -z "$MOUNT_POINT" ]; then
-            DETECTED_LABEL="$LABEL"
-            break  # Exit loop once a matching mount point is found
-        fi
+    if [ -n "$MOUNTPOINT" ] && [ -n "$DRIVE_LABEL" ]; then
+    echo "Found USB drive with label $DRIVE_LABEL mounted at $MOUNTPOINT."
+    else
+    echo "Error: USB drive with labels RPI-RP2 CIRCUITPY not found."
+    exit 1
+    fi
     done
 
     if [ -z "$MOUNT_POINT" ]; then

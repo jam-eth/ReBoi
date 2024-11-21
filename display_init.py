@@ -78,3 +78,13 @@ def disp_init():
     write_register(0x36, 0x48)                 # BGR and mirroring
     write_cmd(0x29)  # Display ON
     LED.value = False
+
+# dtoverlay=vc4-kms-dpi-generic
+# dtparam=hactive=240,hfp=10,hsync=10,hbp=20
+# dtparam=vactive=320,vfp=4,vsync=2,vbp=2
+# dtparam=clock-frequency=7000000
+# dtparam=rgb666-padhi
+# dtparam=hsync-invert
+# dtparam=vsync-invert
+# dtparam=pixclk-invert
+# #dtparam=de-invert

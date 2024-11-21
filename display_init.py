@@ -44,7 +44,7 @@ def write_register(register, data):
     write_bit(0)  # register select
     write_byte(register)
     print("register written:", hex(register))
-    for byte in data:
+    for i in range(0, len(data)):
         write_bit(1)  # register write
         write_byte(data[i])
         print("data written:", byte)

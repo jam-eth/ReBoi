@@ -15,8 +15,9 @@ CS.value = True
 
 RST = digitalio.DigitalInOut(board.GP8)  # Replace with correct pin
 RST.direction = digitalio.Direction.OUTPUT
+RST.value = True
 
-LED = digitalio.DigitalInOut(board.GP18)  # Replace with correct pin
+LED = digitalio.DigitalInOut(board.GP20)  # Replace with correct pin
 LED.direction = digitalio.Direction.OUTPUT
 
 def clock_tick():
@@ -27,12 +28,12 @@ def clock_tick():
     time.sleep(0.0001)
 
 def write_bit(v):
-    MOSI.value = v == 1
+    MOSI.value = bool(v)
     clock_tick()
     print("bit written:", MOSI.value)
 
 def write_byte(v):
-    for x in range(0, 8):
+    for x in range(8):
         write_bit(v & (0b10000000 >> x))
 
 def write_register(register, data):
@@ -45,14 +46,14 @@ def write_register(register, data):
     print("register written:", hex(register))
     for byte in data:
         write_bit(1)  # register write
-        write_byte(byte)
+        write_byte(data[i])
         print("data written:", byte)
     CS.value = True
 
 def write_cmd(v):
     CS.value = False
     write_bit(0)
-    for x in range(0, 8):
+    for x in range(8):
         write_bit(v & (0b10000000 >> x))
     print("command written:", hex(v))
     CS.value = True

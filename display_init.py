@@ -47,7 +47,7 @@ def write_register(register, data):
     for i in range(0, len(data)):
         write_bit(1)  # register write
         write_byte(data[i])
-        print("data written:", byte)
+        print("data written:", hex(data[i]))
     CS.value = True
 
 def write_cmd(v):

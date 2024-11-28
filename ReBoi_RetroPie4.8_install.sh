@@ -107,15 +107,22 @@ sudo ./fbcp-ili9341
 
 # Configure TriggerHappy
 echo "Configuring TriggerHappy..."
-sudo cp "$SCRIPT_DIR/custom.conf" /etc/triggerhappy/triggers.d/
 
-TRIGGERHAPPY_SERVICE="/lib/systemd/system/triggerhappy.service"
-sudo sed -i '/ExecStart=/d' "$TRIGGERHAPPY_SERVICE"
-sudo tee -a "$TRIGGERHAPPY_SERVICE" > /dev/null <<EOL
+# Create a temporary file for the new service configuration
+temp_file=$(mktemp)
+
+# Add the configuration to the temporary file
+cat <<EOF > "$temp_file"
 [Service]
 ExecStart=
 ExecStart=/usr/sbin/thd --triggers /etc/triggerhappy/triggers.d/ --socket /run/thd.socket --user pi --deviceglob /dev/input/event*
-EOL
+EOF
+
+# Use sudo to copy the file content into the systemd override
+sudo systemctl edit --full triggerhappy.service < "$temp_file"
+
+# Clean up the temporary file
+rm -f "$temp_file"
 
 echo "Restarting TriggerHappy service..."
 sudo systemctl daemon-reload

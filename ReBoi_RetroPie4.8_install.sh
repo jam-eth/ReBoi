@@ -15,7 +15,7 @@ sudo tee -a "$CONFIG_FILE" > /dev/null <<EOL
 # Custom HDMI and display settings
 hdmi_group=2
 hdmi_mode=87
-hdmi_cvt=240 220 60 1 0 0 0
+hdmi_cvt=480 440 60 1 0 0 0
 hdmi_force_hotplug=1
 display_rotate=1
 EOL
